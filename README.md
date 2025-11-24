@@ -5,47 +5,56 @@ Plataforma SaaS completa de agendamentos online para profissionais e empresas qu
 ## 🚀 Tecnologias
 
 - **React 19** com **TypeScript**
-- **Vite** como bundler  
+- **Vite** (rolldown) como bundler  
 - **React Router** para navegação
-- **TanStack Query** para gerenciamento de estado
+- **TanStack Query** para gerenciamento de estado e cache
 - **Axios** para chamadas HTTP
-- **Tailwind CSS** para estilização
+- **Tailwind CSS v4** para estilização
 - **date-fns** para manipulação de datas
 
-## 📋 Funcionalidades
+## ✨ Características Principais
 
-### Multi-tenant (Multi-empresa)
+### 🎨 Sistema de Temas Dark/Light
+- Detecção automática do tema do sistema operacional
+- Alternância manual via botão (lua/sol)
+- Persistência da preferência do usuário
+- Transições suaves entre temas
+- Totalmente responsivo em ambos os temas
+
+### 🏢 Multi-tenant (Multi-empresa)
 - Suporte a múltiplas empresas/workspaces
 - Isolamento completo de dados entre empresas
 - URLs contextualizadas: `/app/:workspaceId/...`
 
-### Planos de Assinatura
+### 💳 Planos de Assinatura
 - Planos Starter, Pro e Premium
 - Período de teste de 14 dias
 - Gestão de billing e faturas
 
-### Pagamentos Online
+### 💰 Pagamentos Online
 - Pagamento de assinaturas (empresas)
 - Pagamento antecipado de agendamentos (clientes)
 
-### Áreas de Usuário
+## 👥 Áreas de Usuário
 
-#### Dono da Empresa / Admin
+### Dono da Empresa / Admin
 - Dashboard com métricas
 - Gestão de profissionais e serviços
 - Calendário de agendamentos
 - Gestão de plano e pagamentos
+- Configurações da empresa
 
-#### Profissional
+### Profissional
 - Dashboard pessoal
 - Calendário de agendamentos
 - Configuração de horários
 - Gestão de agendamentos
 
-#### Cliente
+### Cliente
 - Busca de empresas
 - Agendamento online
 - Gestão de agendamentos
+- Perfil pessoal
 
 ## 🛠️ Instalação
 
@@ -54,103 +63,141 @@ Plataforma SaaS completa de agendamentos online para profissionais e empresas qu
 npm install
 
 # Copiar arquivo de ambiente
-cp .env.example .env
+cp .env.example .env.local
+
+# Configurar URL da API no .env.local
+# VITE_API_BASE_URL=http://localhost:3001/api
 
 # Iniciar servidor de desenvolvimento
 npm run dev
 ```
 
+Acesse: `http://localhost:5173`
+
+Para um guia mais detalhado, veja [QUICK_START.md](./QUICK_START.md)
+
+## 📚 Documentação
+
+- [QUICK_START.md](./QUICK_START.md) - Guia de início rápido
+- [THEME_SYSTEM.md](./THEME_SYSTEM.md) - Sistema de temas completo
+- [DARK_MODE_UPDATES.md](./DARK_MODE_UPDATES.md) - Atualizações de dark mode
+- [HOOKS_API_GUIDE.md](./HOOKS_API_GUIDE.md) - Guia de hooks da API
+- [CHANGELOG.md](./CHANGELOG.md) - Histórico de mudanças
+
 ## 🔐 Autenticação
 
 O sistema suporta 3 tipos de usuário:
 
-1. **owner** - Dono da empresa
-2. **professional** - Profissional (barbeiro, manicure, etc.)
-3. **client** - Cliente final
+1. **owner** - Dono da empresa (acesso completo)
+2. **professional** - Profissional (gerencia agenda própria)
+3. **client** - Cliente final (faz agendamentos)
 
-## 🎨 Design
+## 🎨 Design e UX
 
-- **Mobile-first**: Interface responsiva
-- **Tailwind CSS**: Estilização utilitária
-- **Componentes reutilizáveis**: Botões, inputs, cards, modals padronizados
+- **Mobile-first**: Interface responsiva para todos os dispositivos
+- **Tailwind CSS v4**: Estilização moderna e utilitária
+- **Dark/Light Mode**: Temas claro e escuro com detecção automática
+- **Componentes reutilizáveis**: Biblioteca completa de UI components
+- **Acessibilidade**: Labels, aria-labels e navegação por teclado
 
-## 🚀 Build
+## 🏗️ Arquitetura
+
+### Estrutura de Pastas
+```
+src/
+├── api/              # Clientes REST por domínio
+├── components/       # Componentes reutilizáveis
+├── context/          # React Contexts (Auth, Workspace, Theme)
+├── hooks/            # Hooks customizados com React Query
+├── pages/            # Páginas da aplicação
+├── types/            # Tipos TypeScript
+└── index.css         # Estilos globais
+```
+
+### Padrões de Código
+- **Hooks Layer**: Todas as chamadas de API através de hooks customizados
+- **React Query**: Cache automático e invalidação inteligente
+- **TypeScript**: Tipagem estrita em todo o projeto
+- **Context API**: Gerenciamento de estado global
+- **Multi-tenant**: Isolamento por workspaceId
+
+## 🚀 Scripts
 
 ```bash
-# Build de produção
-npm run build
+# Desenvolvimento
+npm run dev              # Inicia servidor de desenvolvimento
 
-# Preview do build
-npm run preview
+# Build
+npm run build           # Cria build de produção
+npm run preview         # Previsualiza build de produção
+
+# Linting
+npm run lint            # Executa ESLint
 ```
 
-Currently, two official plugins are available:
+## 🌐 Variáveis de Ambiente
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Crie um arquivo `.env.local` na raiz do projeto:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+# URL da API Backend
+VITE_API_BASE_URL=http://localhost:3001/api
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+# URL da API Backend
+VITE_API_BASE_URL=http://localhost:3001/api
 ```
-# marka.ai-web
+
+## 📱 Páginas Implementadas
+
+### Públicas
+- `/` - Landing page com apresentação do produto
+- `/login` - Login
+- `/register` - Cadastro multi-perfil
+
+### Autenticadas (Owner/Professional)
+- `/app/:workspaceId/dashboard` - Dashboard com métricas
+- `/app/:workspaceId/appointments` - Gestão de agendamentos
+- `/app/:workspaceId/professionals` - Gestão de profissionais (só owner)
+- `/app/:workspaceId/services` - Gestão de serviços (só owner)
+- `/app/:workspaceId/billing` - Plano e faturamento (só owner)
+- `/app/:workspaceId/settings` - Configurações da empresa (só owner)
+
+### Autenticadas (Client)
+- `/app/explore` - Explorar empresas disponíveis
+- `/app/my-appointments` - Meus agendamentos
+- `/app/profile` - Perfil pessoal
+
+## 🎯 Roadmap
+
+- [ ] Implementar React Table para listagens
+- [ ] Sistema de notificações (email/SMS)
+- [ ] Calendário avançado com drag & drop
+- [ ] Relatórios e analytics
+- [ ] Integração com gateways de pagamento
+- [ ] PWA (Progressive Web App)
+- [ ] Aplicativo mobile (React Native)
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto é proprietário e confidencial.
+
+## 📞 Suporte
+
+Para dúvidas ou problemas:
+- Abra uma issue no GitHub
+- Consulte a documentação
+- Entre em contato com a equipe
+
+---
+
+**Desenvolvido com ❤️ usando React + TypeScript + Vite**

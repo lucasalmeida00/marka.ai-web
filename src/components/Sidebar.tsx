@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useWorkspace } from '../context/WorkspaceContext';
 import Button from './Button';
+import ThemeToggle from './ThemeToggle';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -39,8 +40,8 @@ export default function Sidebar() {
   const links = user?.role === 'owner' ? ownerLinks : user?.role === 'professional' ? professionalLinks : clientLinks;
 
   return (
-    <div className="flex flex-col h-full bg-gray-900 text-white w-64">
-      <div className="p-4 border-b border-gray-800">
+    <div className="flex flex-col h-full bg-gray-900 dark:bg-gray-950 text-white w-64 border-r border-gray-800 dark:border-gray-900">
+      <div className="p-4 border-b border-gray-800 dark:border-gray-900">
         <Link to="/" className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">A</span>
@@ -50,7 +51,7 @@ export default function Sidebar() {
       </div>
 
       {user?.role === 'owner' && workspaces.length > 1 && (
-        <div className="p-4 border-b border-gray-800">
+        <div className="p-4 border-b border-gray-800 dark:border-gray-900">
           <label className="text-xs text-gray-400 mb-2 block">Empresa</label>
           <select
             value={currentWorkspace?.id || ''}
@@ -61,7 +62,7 @@ export default function Sidebar() {
                 navigate('/app');
               }
             }}
-            className="w-full bg-gray-800 text-white px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full bg-gray-800 dark:bg-gray-900 text-white px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             {workspaces.map((workspace) => (
               <option key={workspace.id} value={workspace.id}>
@@ -78,8 +79,8 @@ export default function Sidebar() {
             key={link.path}
             to={link.path}
             className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${isActive(link.path) && location.pathname === link.path
-                ? 'bg-primary-600 text-white'
-                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+              ? 'bg-primary-600 text-white'
+              : 'text-gray-300 hover:bg-gray-800 hover:text-white'
               }`}
           >
             <span className="text-xl">{link.icon}</span>
@@ -88,10 +89,13 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-800">
-        <div className="mb-3">
-          <p className="text-sm font-medium">{user?.name}</p>
-          <p className="text-xs text-gray-400">{user?.email}</p>
+      <div className="p-4 border-t border-gray-800 dark:border-gray-900 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">{user?.name}</p>
+            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+          </div>
+          <ThemeToggle />
         </div>
         <Button variant="secondary" size="sm" fullWidth onClick={handleLogout}>
           Sair

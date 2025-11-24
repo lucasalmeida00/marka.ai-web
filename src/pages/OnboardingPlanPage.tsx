@@ -85,7 +85,7 @@ export default function OnboardingPlanPage() {
                 <ul className="space-y-3 text-left">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start">
-                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5 text-green-500 mr-2 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-gray-600">{feature}</span>

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/AuthContext';
 import { WorkspaceProvider } from './context/WorkspaceContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Public Pages
@@ -37,118 +38,120 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <AuthProvider>
-          <WorkspaceProvider>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <ThemeProvider>
+        <Router>
+          <AuthProvider>
+            <WorkspaceProvider>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-              {/* Onboarding Routes */}
-              <Route
-                path="/onboarding/workspace"
-                element={
-                  <ProtectedRoute roles={['owner']}>
-                    <OnboardingWorkspacePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/onboarding/plan"
-                element={
-                  <ProtectedRoute roles={['owner']}>
-                    <OnboardingPlanPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Onboarding Routes */}
+                <Route
+                  path="/onboarding/workspace"
+                  element={
+                    <ProtectedRoute roles={['owner']}>
+                      <OnboardingWorkspacePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/onboarding/plan"
+                  element={
+                    <ProtectedRoute roles={['owner']}>
+                      <OnboardingPlanPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* App Routes */}
-              <Route
-                path="/app"
-                element={
-                  <ProtectedRoute>
-                    <AppIndexPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* App Routes */}
+                <Route
+                  path="/app"
+                  element={
+                    <ProtectedRoute>
+                      <AppIndexPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Owner/Professional Routes */}
-              <Route
-                path="/app/:workspaceId/dashboard"
-                element={
-                  <ProtectedRoute roles={['owner', 'professional']}>
-                    <DashboardAdminPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/:workspaceId/professionals"
-                element={
-                  <ProtectedRoute roles={['owner']}>
-                    <ProfessionalsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/:workspaceId/services"
-                element={
-                  <ProtectedRoute roles={['owner']}>
-                    <ServicesPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/:workspaceId/appointments"
-                element={
-                  <ProtectedRoute roles={['owner', 'professional']}>
-                    <AppointmentsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/:workspaceId/billing"
-                element={
-                  <ProtectedRoute roles={['owner']}>
-                    <BillingPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/:workspaceId/settings"
-                element={
-                  <ProtectedRoute roles={['owner']}>
-                    <SettingsPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Owner/Professional Routes */}
+                <Route
+                  path="/app/:workspaceId/dashboard"
+                  element={
+                    <ProtectedRoute roles={['owner', 'professional']}>
+                      <DashboardAdminPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/app/:workspaceId/professionals"
+                  element={
+                    <ProtectedRoute roles={['owner']}>
+                      <ProfessionalsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/app/:workspaceId/services"
+                  element={
+                    <ProtectedRoute roles={['owner']}>
+                      <ServicesPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/app/:workspaceId/appointments"
+                  element={
+                    <ProtectedRoute roles={['owner', 'professional']}>
+                      <AppointmentsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/app/:workspaceId/billing"
+                  element={
+                    <ProtectedRoute roles={['owner']}>
+                      <BillingPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/app/:workspaceId/settings"
+                  element={
+                    <ProtectedRoute roles={['owner']}>
+                      <SettingsPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Client Routes */}
-              <Route
-                path="/app/explore"
-                element={
-                  <ProtectedRoute roles={['client']}>
-                    <ExplorePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/my-appointments"
-                element={
-                  <ProtectedRoute roles={['client']}>
-                    <MyAppointmentsPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Client Routes */}
+                <Route
+                  path="/app/explore"
+                  element={
+                    <ProtectedRoute roles={['client']}>
+                      <ExplorePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/app/my-appointments"
+                  element={
+                    <ProtectedRoute roles={['client']}>
+                      <MyAppointmentsPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Catch all */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </WorkspaceProvider>
-        </AuthProvider>
-      </Router>
+                {/* Catch all */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </WorkspaceProvider>
+          </AuthProvider>
+        </Router>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -1,52 +1,69 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
 import AppLayout from '../components/AppLayout';
 import Card, { CardBody, CardFooter, CardHeader } from '../components/Card';
 import Button from '../components/Button';
-import { billingApi } from '../api/billing';
-import type { Plan, Subscription, Invoice } from '../types';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import DataTable from '../components/DataTable';
+import { usePlans, useSubscription, useInvoices } from '../hooks/api/useBilling';
+import type { Invoice } from '../types';
+
+const columnHelper = createColumnHelper<Invoice>();
+
+const invoiceColumns: ColumnDef<Invoice, any>[] = [
+  columnHelper.accessor('amount', {
+    header: 'Valor',
+    cell: (info) => (
+      <span className="font-medium text-gray-900 dark:text-gray-100">
+        R$ {info.getValue().toFixed(2)}
+      </span>
+    ),
+  }),
+  columnHelper.accessor('dueDate', {
+    header: 'Vencimento',
+    cell: (info) => (
+      <span className="text-gray-600 dark:text-gray-400">
+        {format(new Date(info.getValue()), 'dd/MM/yyyy', { locale: ptBR })}
+      </span>
+    ),
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    cell: (info) => {
+      const status = info.getValue();
+      return (
+        <span
+          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${status === 'paid'
+              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
+              : status === 'pending'
+                ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300'
+                : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'
+            }`}
+        >
+          {status === 'paid' ? 'Pago' : status === 'pending' ? 'Pendente' : 'Falhou'}
+        </span>
+      );
+    },
+  }),
+];
 
 export default function BillingPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  const { data: plans = [], isLoading: isLoadingPlans } = usePlans();
+  const { data: subscription, isLoading: isLoadingSubscription } = useSubscription(workspaceId!);
+  const { data: invoices = [], isLoading: isLoadingInvoices } = useInvoices(workspaceId!);
 
-  useEffect(() => {
-    loadData();
-  }, [workspaceId]);
-
-  const loadData = async () => {
-    if (!workspaceId) return;
-
-    try {
-      const [plansData, subscriptionData, invoicesData] = await Promise.all([
-        billingApi.listPlans(),
-        billingApi.getSubscription(workspaceId).catch(() => null),
-        billingApi.listInvoices(workspaceId).catch(() => []),
-      ]);
-
-      setPlans(plansData);
-      setSubscription(subscriptionData);
-      setInvoices(invoicesData);
-    } catch (error) {
-      console.error('Failed to load billing data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  const isLoading = isLoadingPlans || isLoadingSubscription || isLoadingInvoices;
   const currentPlan = plans.find((p) => p.id === subscription?.planId);
 
   return (
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Plano e Pagamentos</h1>
-          <p className="text-gray-600 mt-1">Gerencie seu plano e histórico de pagamentos</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Plano e Pagamentos</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Gerencie seu plano e histórico de pagamentos</p>
         </div>
 
         {isLoading ? (
@@ -58,15 +75,15 @@ export default function BillingPage() {
             {/* Current Plan */}
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold text-gray-900">Plano Atual</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Plano Atual</h2>
               </CardHeader>
               <CardBody>
                 {currentPlan ? (
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900">{currentPlan.name}</h3>
-                      <p className="text-gray-600 mt-1">{currentPlan.description}</p>
-                      <p className="text-sm text-gray-500 mt-2">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{currentPlan.name}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mt-1">{currentPlan.description}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                         {subscription && (
                           <>
                             Próxima cobrança: {format(new Date(subscription.currentPeriodEnd), 'dd/MM/yyyy', { locale: ptBR })}
@@ -75,14 +92,14 @@ export default function BillingPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-bold text-primary-600">
+                      <p className="text-3xl font-bold text-primary-600 dark:text-primary-400">
                         R$ {currentPlan.price}
                       </p>
-                      <p className="text-gray-600">/{currentPlan.interval === 'monthly' ? 'mês' : 'ano'}</p>
+                      <p className="text-gray-600 dark:text-gray-400">/{currentPlan.interval === 'monthly' ? 'mês' : 'ano'}</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-600">Nenhum plano ativo</p>
+                  <p className="text-gray-600 dark:text-gray-400">Nenhum plano ativo</p>
                 )}
               </CardBody>
               <CardFooter>
@@ -92,16 +109,16 @@ export default function BillingPage() {
 
             {/* Available Plans */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Planos Disponíveis</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Planos Disponíveis</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {plans.map((plan) => (
                   <Card key={plan.id} className={plan.id === subscription?.planId ? 'border-2 border-primary-500' : ''}>
                     <CardHeader className="text-center">
-                      <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
-                      <p className="text-gray-600 mt-1">{plan.description}</p>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{plan.name}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mt-1">{plan.description}</p>
                     </CardHeader>
                     <CardBody className="text-center">
-                      <p className="text-3xl font-bold text-gray-900 mb-4">
+                      <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                         R$ {plan.price}
                       </p>
                       <ul className="text-sm text-left space-y-2">
@@ -133,34 +150,10 @@ export default function BillingPage() {
             {invoices.length > 0 && (
               <Card>
                 <CardHeader>
-                  <h2 className="text-xl font-semibold text-gray-900">Histórico de Faturas</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Histórico de Faturas</h2>
                 </CardHeader>
                 <CardBody>
-                  <div className="space-y-3">
-                    {invoices.map((invoice) => (
-                      <div
-                        key={invoice.id}
-                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            R$ {invoice.amount.toFixed(2)}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Vencimento: {format(new Date(invoice.dueDate), 'dd/MM/yyyy', { locale: ptBR })}
-                          </p>
-                        </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${invoice.status === 'paid'
-                            ? 'bg-green-100 text-green-800'
-                            : invoice.status === 'pending'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                          {invoice.status === 'paid' ? 'Pago' : invoice.status === 'pending' ? 'Pendente' : 'Falhou'}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                  <DataTable data={invoices} columns={invoiceColumns} isLoading={isLoadingInvoices} />
                 </CardBody>
               </Card>
             )}

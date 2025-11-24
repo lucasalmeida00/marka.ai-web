@@ -1,72 +1,62 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import AppLayout from '../components/AppLayout';
 import Card, { CardBody, CardHeader } from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { workspacesApi } from '../api/workspaces';
+import { useWorkspace as useWorkspaceHook, useUpdateWorkspace } from '../hooks/api/useWorkspaces';
 import { useWorkspace } from '../context/WorkspaceContext';
-import type { Workspace } from '../types';
+import { workspaceSchema, type WorkspaceInput } from '../schemas/workspace.schema';
 
 export default function SettingsPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const { refreshWorkspaces } = useWorkspace();
-  const [workspace, setWorkspace] = useState<Workspace | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    phone: '',
-    email: '',
-    address: '',
-    city: '',
+
+  const { data: workspace, isLoading } = useWorkspaceHook(workspaceId || '');
+  const { mutate: updateWorkspace, isPending: isSaving } = useUpdateWorkspace();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setError,
+  } = useForm<WorkspaceInput>({
+    resolver: zodResolver(workspaceSchema),
   });
 
   useEffect(() => {
-    loadWorkspace();
-  }, [workspaceId]);
-
-  const loadWorkspace = async () => {
-    if (!workspaceId) return;
-
-    try {
-      const data = await workspacesApi.get(workspaceId);
-      setWorkspace(data);
-      setFormData({
-        name: data.name,
-        description: data.description || '',
-        phone: data.phone || '',
-        email: data.email || '',
-        address: data.address || '',
-        city: data.city || '',
+    if (workspace) {
+      reset({
+        name: workspace.name,
+        description: workspace.description || '',
+        phone: workspace.phone || '',
+        email: workspace.email || '',
+        address: workspace.address || '',
+        city: workspace.city || '',
       });
-    } catch (error) {
-      console.error('Failed to load workspace:', error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [workspace, reset]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: WorkspaceInput) => {
     if (!workspaceId) return;
 
-    setIsSaving(true);
-    try {
-      await workspacesApi.update(workspaceId, formData);
-      await refreshWorkspaces();
-      alert('Configurações salvas com sucesso!');
-    } catch (error) {
-      console.error('Failed to update workspace:', error);
-      alert('Erro ao salvar configurações');
-    } finally {
-      setIsSaving(false);
-    }
+    updateWorkspace(
+      { id: workspaceId, data },
+      {
+        onSuccess: async () => {
+          await refreshWorkspaces();
+          alert('Configurações salvas com sucesso!');
+        },
+        onError: (error: any) => {
+          setError('root', {
+            message: error.response?.data?.message || 'Erro ao salvar configurações',
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -79,59 +69,61 @@ export default function SettingsPage() {
 
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="w-12 h-12 border-4 border-primary-600 dark:border-primary-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {errors.root && (
+              <div className="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 px-4 py-3 rounded-lg text-sm">
+                {errors.root.message}
+              </div>
+            )}
+
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold text-gray-900">Informações Gerais</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Informações Gerais</h2>
               </CardHeader>
               <CardBody className="space-y-4">
                 <Input
                   label="Nome da Empresa"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
+                  {...register('name')}
+                  error={errors.name?.message}
                   required
                 />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Descrição
                   </label>
                   <textarea
-                    name="description"
+                    {...register('description')}
                     rows={3}
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                   />
+                  {errors.description && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
+                  )}
                 </div>
                 <Input
                   label="Telefone"
-                  name="phone"
                   type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
+                  {...register('phone')}
+                  error={errors.phone?.message}
                 />
                 <Input
                   label="Email"
-                  name="email"
                   type="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register('email')}
+                  error={errors.email?.message}
                 />
                 <Input
                   label="Endereço"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
+                  {...register('address')}
+                  error={errors.address?.message}
                 />
                 <Input
                   label="Cidade"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
+                  {...register('city')}
+                  error={errors.city?.message}
                 />
               </CardBody>
             </Card>

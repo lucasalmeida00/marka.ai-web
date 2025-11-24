@@ -112,17 +112,17 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-linear-to-br from-primary-50 to-white py-20 px-4 sm:px-6 lg:px-8">
+      <section className="bg-linear-to-br from-primary-50 to-white dark:from-gray-800 dark:to-gray-900 py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
             Transforme seu negócio com
-            <span className="text-primary-600"> agendamentos online</span>
+            <span className="text-primary-600 dark:text-primary-400"> agendamentos online</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
             Plataforma completa para gerenciar agendamentos, profissionais, pagamentos e muito mais.
             Perfeito para barbearias, salões, clínicas, academias e qualquer negócio com hora marcada.
           </p>
@@ -138,20 +138,20 @@ export default function LandingPage() {
               </Button>
             </a>
           </div>
-          <p className="text-sm text-gray-500 mt-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
             Não é necessário cartão de crédito para testar
           </p>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section id="beneficios" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="beneficios" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Tudo que você precisa em um só lugar
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               Recursos pensados para facilitar o dia a dia do seu negócio
             </p>
           </div>
@@ -160,10 +160,10 @@ export default function LandingPage() {
             {benefits.map((benefit, index) => (
               <div key={index} className="text-center p-6">
                 <div className="text-5xl mb-4">{benefit.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   {benefit.description}
                 </p>
               </div>
@@ -173,13 +173,13 @@ export default function LandingPage() {
       </section>
 
       {/* Plans Section */}
-      <section id="planos" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section id="planos" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Escolha o plano ideal para você
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               Sem taxas ocultas, sem surpresas. Cancele quando quiser.
             </p>
           </div>
@@ -193,8 +193,8 @@ export default function LandingPage() {
                   </div>
                 )}
                 <CardHeader className="text-center">
-                  <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
-                  <p className="text-gray-600 mt-1">{plan.description}</p>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{plan.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mt-1">{plan.description}</p>
                 </CardHeader>
                 <CardBody className="text-center">
                   <div className="mb-6">
@@ -204,7 +204,7 @@ export default function LandingPage() {
                   <ul className="space-y-3 text-left">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start">
-                        <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-5 h-5 text-green-500 mr-2 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span className="text-gray-600">{feature}</span>
@@ -229,13 +229,13 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Perguntas Frequentes
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               Tire suas dúvidas sobre a plataforma
             </p>
           </div>
@@ -244,10 +244,10 @@ export default function LandingPage() {
             {faqs.map((faq, index) => (
               <Card key={index}>
                 <CardBody>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     {faq.question}
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-300">
                     {faq.answer}
                   </p>
                 </CardBody>
@@ -258,7 +258,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-primary-600">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-primary-600 dark:bg-primary-700">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
             Pronto para começar?
@@ -275,7 +275,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-gray-900 dark:bg-gray-950 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>

@@ -35,16 +35,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Top Navigation */}
-      <nav className="bg-white border-b border-gray-200 fixed top-0 w-full z-30">
+      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 fixed top-0 w-full z-30">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/app" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary-600 dark:bg-primary-700 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">A</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">Agendamentos</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-gray-100">Agendamentos</span>
             </Link>
 
             <div className="flex items-center space-x-4">
@@ -58,7 +58,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       navigate(`/app/${workspace.id}/dashboard`);
                     }
                   }}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                 >
                   {workspaces.map((workspace) => (
                     <option key={workspace.id} value={workspace.id}>
@@ -69,7 +69,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               )}
 
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-700">{user?.name}</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">{user?.name}</span>
                 <Button size="sm" variant="ghost" onClick={handleLogout}>
                   Sair
                 </Button>
@@ -81,13 +81,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       <div className="pt-16 flex">
         {/* Sidebar */}
-        <aside className="hidden md:block w-64 bg-white border-r border-gray-200 fixed left-0 bottom-0 top-16 overflow-y-auto">
+        <aside className="hidden md:block w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed left-0 bottom-0 top-16 overflow-y-auto">
           <nav className="p-4 space-y-1">
             {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <span className="text-xl">{item.icon}</span>
                 <span className="font-medium">{item.name}</span>
@@ -103,13 +103,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-30">
         <div className="flex justify-around">
           {menuItems.slice(0, 4).map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              className="flex flex-col items-center py-2 px-3 text-gray-600 hover:text-primary-600"
+              className="flex flex-col items-center py-2 px-3 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400"
             >
               <span className="text-2xl">{item.icon}</span>
               <span className="text-xs mt-1">{item.name}</span>
