@@ -35,10 +35,10 @@ const invoiceColumns: ColumnDef<Invoice, any>[] = [
       return (
         <span
           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${status === 'paid'
-              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
-              : status === 'pending'
-                ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300'
-                : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'
+            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
+            : status === 'pending'
+              ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300'
+              : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'
             }`}
         >
           {status === 'paid' ? 'Pago' : status === 'pending' ? 'Pendente' : 'Falhou'}
@@ -50,7 +50,7 @@ const invoiceColumns: ColumnDef<Invoice, any>[] = [
 
 export default function BillingPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
-  
+
   const { data: plans = [], isLoading: isLoadingPlans } = usePlans();
   const { data: subscription, isLoading: isLoadingSubscription } = useSubscription(workspaceId!);
   const { data: invoices = [], isLoading: isLoadingInvoices } = useInvoices(workspaceId!);

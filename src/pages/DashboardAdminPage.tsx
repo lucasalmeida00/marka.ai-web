@@ -8,7 +8,7 @@ import { useAppointments } from '../hooks/api/useAppointments';
 export default function DashboardAdminPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const today = new Date().toISOString().split('T')[0];
-  
+
   const { data: appointments = [], isLoading } = useAppointments(
     workspaceId || '',
     { startDate: today },

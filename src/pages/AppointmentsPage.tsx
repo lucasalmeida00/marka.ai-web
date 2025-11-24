@@ -83,8 +83,8 @@ const columns: ColumnDef<Appointment, any>[] = [
       if (!paymentStatus) return <span className="text-gray-400 dark:text-gray-500">-</span>;
       return (
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${paymentStatus === 'paid'
-            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
-            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300'
+          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
           }`}>
           {paymentStatus === 'paid' ? 'Pago' : 'Pendente'}
         </span>

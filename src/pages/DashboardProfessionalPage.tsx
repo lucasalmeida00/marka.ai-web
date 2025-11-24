@@ -63,19 +63,18 @@ export default function DashboardProfessionalPage() {
                       </p>
                     </div>
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        appointment.status === 'confirmed'
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${appointment.status === 'confirmed'
                           ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
                           : appointment.status === 'completed'
-                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                          : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300'
-                      }`}
+                            ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                            : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300'
+                        }`}
                     >
                       {appointment.status === 'confirmed'
                         ? 'Confirmado'
                         : appointment.status === 'completed'
-                        ? 'Concluído'
-                        : 'Pendente'}
+                          ? 'Concluído'
+                          : 'Pendente'}
                     </span>
                   </div>
                 ))}

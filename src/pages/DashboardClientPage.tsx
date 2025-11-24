@@ -72,11 +72,10 @@ export default function DashboardClientPage() {
                       </div>
                       <div className="flex items-center space-x-3">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            appointment.status === 'confirmed'
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${appointment.status === 'confirmed'
                               ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
                               : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300'
-                          }`}
+                            }`}
                         >
                           {appointment.status === 'confirmed' ? 'Confirmado' : 'Pendente'}
                         </span>
